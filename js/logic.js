@@ -81,7 +81,7 @@ function teamSelection(numTeams) {
 	var id = 0;
 	for (i = 0; i < numTeams; i++) {
 		id = i;
-		var idString = "<input type='text' id='team" + id +"' class='btn btn btn-default' placeholder='Team Name' /><br/><br>";
+		var idString = "<input type='text' class='form-control' id='team" + id +"' class='btn btn btn-default' placeholder='Team Name' /><br/><br>";
 		document.getElementById('listOfTeams').innerHTML += idString;
 	}
 	document.getElementById('listOfTeams').innerHTML += "<br/><button type='submit' class='btn btn btn-default' id='submit2'>Submitt</button><br/><br>";
