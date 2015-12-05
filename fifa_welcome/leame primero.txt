@@ -1,0 +1,27 @@
+Fuente FIFA Welcome...
+Versión 1.1 Julio 9 del 2010
+Fuente TrueType.
+
+Esta fuente puede ser distribuida bajo los términos de uso del software de la Federación Internacional de Fútbol Asociación y Whitestone Publishing Agency Co. Ltd., perteneciente a esta misma organización y empresa.
+
+Esta fuente "FIFA Welcome" no es original yo (el desarrollador) la estoy desarrollando bajo los derechos de autor y por ningún motivo deberá modificar la procedencia de la misma.
+
+(C)2002 Whitestone Publishing Agency Co. Ltd. in United Kingdom and/or other countries.
+(C)2005 FIFA.
+
+
+>>IMPORTANTE<<
+Esta fuente está en proceso de desarrollo (BETA 2), solo úsenla como prueba hasta que se lance la versión final.
+
+>>CAMBIOS DE VERSIÓN<<
+
+---
+0.94
+Sólo están disponibles las mayúsculas y los signos de <, =, >, ., :, ;
+---
+1.1
+Se incluyen más caracteres usados en el Español (a excepción de Ü o "U" con diéresis).
+Sólo se puede usar en tamaño mayor a 28 puntos por que a una escala menor se distorsiona.
+---
+1.3
+Mejoras en las tipografías de varios caracteres como escala lineal, altura de las minúsculas uniforme, sólo se puede usar en un tamaño grande (más de 20 para evitar distosión).

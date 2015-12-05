@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'fifawelcome'; /*a name to be used later*/
+    src: url('fonts/EASansCurves-Regular.ttf'); /*URL to font*/
+    /*src: url('../fifa_welcome/fifawelcome1.3.ttf'); /*URL to font*/
+}
+
+body {
+  background: url('fig/background.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; 
+}
+
+h1 {
+    text-align: center;
+    font-family: fifawelcome;
+    font-size: 80;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+.last-word {
+	color: #E4181B;
+}
+
+#mainMenu {
+	overflow:auto;
+    margin-top: 500px;
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px black;
+    opacity: 0.8;
+}
+
+#info {
+	position: relative;
+	left: 25%;
+}
