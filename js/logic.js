@@ -42,7 +42,7 @@ $(document).ready(function() {
 	checks weather all matches are played. If so, 
 	show top 3 table*/
 	$("#next").click(function() {
-		var tempPoints = 0;
+		/*var tempPoints = 0;
 		var resultString = $("#result").val().split("-");
 		var scoreHome = resultString[0];
 		var scoreAway = resultString[1];
@@ -62,15 +62,18 @@ $(document).ready(function() {
 			var tempPointsA = objectTeams[aTeam].points + 1;
 			objectTeams[hTeam].points = tempPointsH;
 			objectTeams[aTeam].points = tempPointsA;
-		}
-
-		var matchString = match();
-       	$('#match').text(matchString);
-       	$('#result').val('');
-       	$('#table').empty();
-       	sortByPoints();
-       	table();
-       	console.log("test");	
+		}*/
+		var resultString = $("#result").val();
+		if (/\d{1}\-\d{1}/.test(resultString)) {
+			result();
+			var matchString = match();
+       		$('#match').text(matchString);
+       		$('#result').val('');
+       		$('#table').empty();
+       		sortByPoints();
+       		table();
+       		console.log("test");
+		}	
 	})
 
 	})
@@ -172,7 +175,37 @@ function getSecondTeam(t1) {
 
 // Function that adds attributes to team 
 function result() {
+	var tempPoints = 0;
+	var resultString = $("#result").val().split("-");
+	var scoreHome = 0;
+	var scoreAway = 0;
+	scoreHome = resultString[0];
+	scoreAway = resultString[1];
+	getHomeTeam();
+	getAwayTeam();
 
+	if (scoreHome > scoreAway) {
+		var tempPoints = objectTeams[hTeam].points + 3;
+		objectTeams[hTeam].points = tempPoints;
+	}
+	else if (scoreAway > scoreHome) {
+		var tempPoints = objectTeams[aTeam].points + 3;
+		objectTeams[aTeam].points = tempPoints;
+	}
+	else {
+		var tempPointsH = objectTeams[hTeam].points + 1;
+		var tempPointsA = objectTeams[aTeam].points + 1;
+		objectTeams[hTeam].points = tempPointsH;
+		objectTeams[aTeam].points = tempPointsA;
+	}
+	var updateHomeGoals = parseInt(objectTeams[hTeam].goals) + parseInt(scoreHome); 
+	var updateHomeConcede = parseInt(objectTeams[hTeam].goals) + parseInt(scoreAway);
+	var updateAwayGoals = parseInt(objectTeams[aTeam].goals) + parseInt(scoreAway);
+	var updateAwayConcede = parseInt(objectTeams[aTeam].conceded) + parseInt(scoreHome);
+	objectTeams[hTeam].goals = updateHomeGoals;
+	objectTeams[hTeam].conceded = updateHomeConcede;
+	objectTeams[aTeam].goals = updateAwayGoals;
+	objectTeams[aTeam].conceded = updateAwayConcede;
 }
 
 // Get home team index
@@ -184,6 +217,7 @@ function getHomeTeam() {
 	}
 }
 
+// Get away team index
 function getAwayTeam() {
 	for (i = 0; i < objectTeams.length; i++) {
 		if (objectTeams[i].team === aTeam) {
