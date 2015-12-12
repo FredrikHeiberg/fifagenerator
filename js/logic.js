@@ -5,6 +5,10 @@ var notPlayed = [];
 var playedTeams = [];
 var hTeam = 0;
 var aTeam = 0;
+var roundCounter = 0;
+var teamOneMet = [];
+
+var roundId = 0;
 
 $(document).ready(function() {
 
@@ -36,12 +40,14 @@ $(document).ready(function() {
 		else {
 			addTeams();
 		}
+		$("#warning").hide();
 	})
 
 	/* When result is registered, go to next match
 	checks weather all matches are played. If so, 
 	show top 3 table*/
 	$("#next").click(function() {
+		$("#warning").hide();
 		/*var tempPoints = 0;
 		var resultString = $("#result").val().split("-");
 		var scoreHome = resultString[0];
@@ -72,8 +78,11 @@ $(document).ready(function() {
        		$('#table').empty();
        		sortByPoints();
        		table();
-       		console.log("test");
 		}	
+		else {
+			console.log("INVALID INPUT");	
+			$("#warning").show();
+		}
 	})
 
 	})
@@ -135,17 +144,32 @@ function table() {
 /* Function that displays next match.
 Checks if the round is over, if so, set playedTeams to zero*/
 function match() {
+	console.log("ROUND COUNTER " + roundCounter);
 	if (playedTeams.length === objectTeams.length) {
-		notPlayed = objectTeams.slice(0);
+		playedTeams = [];
+		notPlayed = objectTeams.slice(0); //Copoy objectTeams to notPlayed
+		//Check if all teams have met each other, if so, reset teamsMeet and start new round
+		if (roundCounter/2 == objectTeams.length - 1) {
+			roundId++;
+			for (i = 0; i < objectTeams.length; i++) {
+				objectTeams[i].teamsMeet = [];
+				var roundString = "Round: " + roundId;
+				document.getElementById('rId').innerHTML = roundString;
+				console.log("TEAMS MET RESET: " + objectTeams[i].teamsMeet);
+			}
+			roundCounter = 0;
+		}
 	}
-	else {
-		hTeam = getFirstTeam();
-		aTeam = getSecondTeam(hTeam);
 
-		var matchup = hTeam+" - "+aTeam;
-		//document.getElementById('match').innerHTML += matchup;
-		return matchup;
-	}
+	getFirstTeam();
+	getSecondTeam();
+	console.log("AWAY TEAM SET: " + aTeam);
+
+	var matchup = hTeam+" - "+aTeam;
+	//document.getElementById('match').innerHTML += matchup;
+	//console.log(notPlayed);
+	roundCounter++;
+	return matchup;
 }
 
 // Choose the first team to play this round
@@ -153,23 +177,27 @@ function getFirstTeam() {
 	var firstTeam = Math.floor(Math.random() * notPlayed.length);
 	playedTeams.push(notPlayed[firstTeam]);
 	var teamOneName = notPlayed[firstTeam].team;
+	teamOneMet = notPlayed[firstTeam].teamsMeet;
 	notPlayed.splice(firstTeam, 1);
-	return teamOneName;
+	hTeam = teamOneName;
 }
 
 /* Choose the second team to play this round.
 Makes sure that two teams don't meet twice in a round*/
-function getSecondTeam(t1) {
+function getSecondTeam() {
 	var secondTeam = Math.floor(Math.random() * notPlayed.length);
-	console.log(secondTeam);
-	if (jQuery.inArray(notPlayed[secondTeam].team, t1.team) < 0) {
+	console.log("INDEX OF TEAM: "+secondTeam);
+	// Check if selected team have not played yet, and check that they have not met before
+	if (jQuery.inArray(notPlayed[secondTeam].team, teamOneMet) < 0) {
 		playedTeams.push(notPlayed[secondTeam]);
 		var teamTwoName = notPlayed[secondTeam].team;
 		notPlayed.splice(secondTeam, 1);
-		return teamTwoName;
+		console.log("SECOND TEAM NAME: " + teamTwoName);
+		aTeam = teamTwoName;
 	}
 	else {
-		getSecondTeam(t1);
+		console.log("RUN AGAIN TO GET SECOND TEAM!");
+		getSecondTeam();
 	}
 }
 
@@ -198,6 +226,7 @@ function result() {
 		objectTeams[hTeam].points = tempPointsH;
 		objectTeams[aTeam].points = tempPointsA;
 	}
+	// Add goals and conceds to team object
 	var updateHomeGoals = parseInt(objectTeams[hTeam].goals) + parseInt(scoreHome); 
 	var updateHomeConcede = parseInt(objectTeams[hTeam].goals) + parseInt(scoreAway);
 	var updateAwayGoals = parseInt(objectTeams[aTeam].goals) + parseInt(scoreAway);
@@ -206,6 +235,10 @@ function result() {
 	objectTeams[hTeam].conceded = updateHomeConcede;
 	objectTeams[aTeam].goals = updateAwayGoals;
 	objectTeams[aTeam].conceded = updateAwayConcede;
+
+	// Add teams meet 
+	objectTeams[hTeam].teamsMeet.push(objectTeams[aTeam].team);
+	objectTeams[aTeam].teamsMeet.push(objectTeams[hTeam].team);
 }
 
 // Get home team index
