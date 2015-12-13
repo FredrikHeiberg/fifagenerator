@@ -73,14 +73,13 @@ $(document).ready(function() {
 		if (/\d{1}\-\d{1}/.test(resultString)) {
 			result();
 			var matchString = match();
-       		$('#match').text(matchString);
+			$('#match').text(matchString);
        		$('#result').val('');
        		$('#table').empty();
        		sortByPoints();
        		table();
 		}	
 		else {
-			console.log("INVALID INPUT");	
 			$("#warning").show();
 		}
 	})
@@ -131,12 +130,13 @@ function sortByPoints() {
 
 // Function that populates table
 function table() {
-	var tableLayout = "<tr><th>Position</th><th>Team</th><th>GD</th><th>Points</th></tr>";
+	var tableLayout = "<tr><th>Position</th><th>Team</th><th>Matches</th><th>GD</th><th>Points</th></tr>";
 	document.getElementById('table').innerHTML += tableLayout
 	for (i = 0; i < objectTeams.length; i++) {
 		var position = i+1;
 		var gd = objectTeams[i].goals - objectTeams[i].conceded;
-		var teamInfo = "<tbody><tr><td>"+position+"</td><td>"+objectTeams[i].team+"</td><td>"+gd+"</td><td>"+objectTeams[i].points+"</td></tr></tbody>";
+		var matches = objectTeams[i].matches;
+		var teamInfo = "<tbody><tr><td>"+position+"</td><td>"+objectTeams[i].team+"</td><td>"+matches+"</td></td>"+"</td><td>"+gd+"</td><td>"+objectTeams[i].points+"</td></tr></tbody>";
 		document.getElementById('table').innerHTML += teamInfo;
 	}
 }
@@ -144,7 +144,6 @@ function table() {
 /* Function that displays next match.
 Checks if the round is over, if so, set playedTeams to zero*/
 function match() {
-	console.log("ROUND COUNTER " + roundCounter);
 	if (playedTeams.length === objectTeams.length) {
 		playedTeams = [];
 		notPlayed = objectTeams.slice(0); //Copoy objectTeams to notPlayed
@@ -155,7 +154,6 @@ function match() {
 				objectTeams[i].teamsMeet = [];
 				var roundString = "Round: " + roundId;
 				document.getElementById('rId').innerHTML = roundString;
-				console.log("TEAMS MET RESET: " + objectTeams[i].teamsMeet);
 			}
 			roundCounter = 0;
 		}
@@ -163,7 +161,6 @@ function match() {
 
 	getFirstTeam();
 	getSecondTeam();
-	console.log("AWAY TEAM SET: " + aTeam);
 
 	var matchup = hTeam+" - "+aTeam;
 	//document.getElementById('match').innerHTML += matchup;
@@ -186,19 +183,21 @@ function getFirstTeam() {
 Makes sure that two teams don't meet twice in a round*/
 function getSecondTeam() {
 	var secondTeam = Math.floor(Math.random() * notPlayed.length);
-	console.log("INDEX OF TEAM: "+secondTeam);
+
 	// Check if selected team have not played yet, and check that they have not met before
 	if (jQuery.inArray(notPlayed[secondTeam].team, teamOneMet) < 0) {
 		playedTeams.push(notPlayed[secondTeam]);
 		var teamTwoName = notPlayed[secondTeam].team;
 		notPlayed.splice(secondTeam, 1);
-		console.log("SECOND TEAM NAME: " + teamTwoName);
 		aTeam = teamTwoName;
 	}
 	else {
-		console.log("RUN AGAIN TO GET SECOND TEAM!");
 		getSecondTeam();
 	}
+}
+
+function getSecondTeamOddNumber() {
+	aTeam = checkFewestPlayedGames();
 }
 
 // Function that adds attributes to team 
@@ -239,6 +238,10 @@ function result() {
 	// Add teams meet 
 	objectTeams[hTeam].teamsMeet.push(objectTeams[aTeam].team);
 	objectTeams[aTeam].teamsMeet.push(objectTeams[hTeam].team);
+
+	// Add match count
+	objectTeams[hTeam].matches++;
+	objectTeams[aTeam].matches++;
 }
 
 // Get home team index
@@ -257,5 +260,21 @@ function getAwayTeam() {
 			aTeam = i;
 		}
 	}	
+}
+
+// Get the team that have played fewest matches
+function checkFewestPlayedGames() {
+	var lowestValue = 100;
+	var team;
+	console.log(playedTeams.length);
+	for (i = 0; i < playedTeams.length; i++) {
+		if (playedTeams[i].matches < lowestValue) {
+			console.log(playedTeams[i])
+			team = playedTeams[i].team;
+			lowestValue = objectTeams[i].matches;
+		}
+	}
+	console.log("TEAM "+team);
+	return(team);
 }
 
